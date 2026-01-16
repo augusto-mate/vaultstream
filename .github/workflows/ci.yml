@@ -22,4 +22,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: docker build -t vaultstream .
+      - run: docker build -t vaultstream -f docker/Dockerfile .
+

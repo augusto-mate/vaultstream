@@ -1,0 +1,23 @@
+# 🧩 /docker/docker-compose.yml
+
+version: "3.9"
+
+services:
+  vaultstream:
+    build: .
+    container_name: vaultstream
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/data
+      - ./rclone.conf:/root/.config/rclone/rclone.conf:ro
+    environment:
+      - VAULTSTREAM_ZIP_PASSWORD=${VAULTSTREAM_ZIP_PASSWORD}
+      - SMTP_SERVER=${SMTP_SERVER}
+      - SMTP_PORT=${SMTP_PORT}
+      - EMAIL_FROM=${EMAIL_FROM}
+      - EMAIL_PASS=${EMAIL_PASS}
+      - EMAIL_TO=${EMAIL_TO}
+      - RCLONE_REMOTE=${RCLONE_REMOTE}
+      - RCLONE_FOLDER=${RCLONE_FOLDER}

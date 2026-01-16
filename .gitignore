@@ -1,0 +1,79 @@
+# =========================
+# 🚫 .gitignore
+# =========================
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+
+# =========================
+# Virtual environments
+# =========================
+.venv/
+venv/
+env/
+
+# =========================
+# Jupyter / Colab
+# =========================
+.ipynb_checkpoints/
+*.ipynb~
+/content/
+*.log
+
+# =========================
+# Environment / Secrets
+# =========================
+.env
+.env.*
+*.key
+*.pem
+credentials.json
+
+# =========================
+# VaultStream runtime
+# =========================
+downloads/
+encrypted/
+tmp/
+data/
+
+# =========================
+# rclone
+# =========================
+rclone.conf
+
+# =========================
+# Streamlit
+# =========================
+.streamlit/
+.streamlit/config.toml
+
+# =========================
+# Docker
+# =========================
+*.tar
+docker-compose.override.yml
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Editor
+# =========================
+.vscode/
+.idea/
+*.swp

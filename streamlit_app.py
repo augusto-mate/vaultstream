@@ -3,12 +3,12 @@
 import os
 import sys
 
-# Força o diretório de trabalho para a raiz do projeto
-diretorio_projeto = os.path.dirname(os.path.abspath(__file__))
-os.chdir(diretorio_projeto)
-sys.path.insert(0, diretorio_projeto)
+# Pega o caminho absoluto de onde o streamlit_app.py está
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, ROOT_DIR)
 
 import streamlit as st
+# Agora o Python vai olhar diretamente na ROOT_DIR para achar a pasta 'core'
 from core.pipeline import run_pipeline
 
 st.set_page_config(page_title="VaultStream", layout="centered")
@@ -25,5 +25,6 @@ if st.button("Iniciar"):
         st.success("Processo concluído!")
     else:
         st.warning("Cole um magnet link válido.")
+
 
 

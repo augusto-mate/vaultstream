@@ -1,6 +1,12 @@
 # 🌐 ui/gradio_app.py
 
+import sys
+import os
 import gradio as gr
+
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, ROOT_DIR)
+
 from core.pipeline import run_pipeline
 
 def run_ui(magnets_text, destino, zipar):

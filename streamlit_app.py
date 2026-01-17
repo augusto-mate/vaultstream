@@ -3,15 +3,10 @@
 import os
 import sys
 
-# Define a raiz e a pasta core
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-CORE_DIR = os.path.join(ROOT_DIR, "core")
-
-# Adiciona ambos ao path
-if ROOT_DIR not in sys.path:
-    sys.path.insert(0, ROOT_DIR)
-if CORE_DIR not in sys.path:
-    sys.path.insert(1, CORE_DIR)
+# Garante que o diretório atual (/content/vaultstream) esteja no topo da busca
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.insert(0, current_dir)
 
 import streamlit as st
 from core.pipeline import run_pipeline
@@ -30,6 +25,7 @@ if st.button("Iniciar"):
         st.success("Processo concluído!")
     else:
         st.warning("Cole um magnet link válido.")
+
 
 
 

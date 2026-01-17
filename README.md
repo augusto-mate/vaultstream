@@ -1,13 +1,13 @@
 # VaultStream 🚀
 
-![Release](https://img.shields.io/github/v/release/augusto-mate/vaultstream)
-![CI](https://img.shields.io/github/actions/workflow/status/augusto-mate/vaultstream/ci.yml)
-![Open Source](https://img.shields.io/badge/Open%20Source-100%25-16A34A)
-
-![License](https://img.shields.io/badge/License-MIT-3B82F6)
-![Python](https://img.shields.io/badge/Python-3.9+-3776AB)
+![Open Source](https://img.shields.io/badge/Open%20Source-100%25-6AA84F)
+![License](https://img.shields.io/badge/License-MIT-16A34A)
+![Python](https://img.shields.io/badge/Python-3.9+-3B82F6)
 ![Docker](https://img.shields.io/badge/Docker-Ready-0D6EFD)
 ![Colab](https://img.shields.io/badge/Google%20Colab-Ready-F9AB00)
+![Cloud](https://img.shields.io/badge/Cloud-First-E67E22)
+
+<br>
 
 **VaultStream** é um projeto **open-source** que automatiza o fluxo completo:
 
@@ -32,41 +32,19 @@ Com foco em **privacidade**, **simplicidade** e **execução na nuvem**.
 - 🧪 Compatível com **Google Colab**
 - 🆓 Totalmente gratuito e com código-fonte aberto
 
-<br>
-
-## 🎨 Identidade Visual
-
-<p align="justify">
-  <img src="assets/logo.png" alt="VaultStream Logo" width="500" />
-</p>
-
-> **Segurança em movimento. Automação orientada por propósito.**  
-
-<br>
-
-## 🔀️ Arquitetura (fluxo)
+## 🔀️ Fluxo
 
 ```text
-Magnet Links
-     ↓
-aria2 (torrent)
-     ↓
-Arquivos temporários
-     ↓
-7-Zip (AES-256)
-     ↓
-rclone (upload cloud)
-     ↓
-Google Drive / OneDrive / Mega
-     ↓
-Limpeza automática
-     ↓
-Notificação por e-mail
+Torrent
+  ↓
+Cloud 
+  ↓
+Email 
 ```
 
 Veja o diagrama completo em [`docs/flow.md`](docs/flow.md).
 
-<br>
+---
 
 ## ⚙️ Guia Prático de Execução em Ambientes
 
@@ -81,7 +59,7 @@ O notebook:
 - configura o ambiente
 - executa o VaultStream
 
-<br>
+📌 _Na Fase 3, interaja com o terminal para configurar sua nuvem._
 
 ### Interface Web (Streamlit)
 
@@ -94,8 +72,6 @@ streamlit run streamlit_app.py
 - Colab: acesso via link público
 - VPS/Docker: `http://localhost:8501`
 
-<br>
-
 ### Docker (seedbox real)
 
 ```bash
@@ -107,22 +83,34 @@ Ideal para:
 - execução 24/7
 - automação contínua
 
-<br>
+---
 
 ## 📁 Estrutura do Projeto
 
 Consulte [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) para detalhes completos da árvore de diretórios, responsabilidades de cada pasta, arquivo e fluxos de build/teste. 
 
-<br>
+## 📚 Documentação
 
-## 📘 Documentação
+<table>
+  <tr>
+    <td>📝 Arquitetura técnica</td>
+    <td><a href="docs/TECHNICAL.md"><code>docs/TECHNICAL.md</code></a></td>
+  </tr>
+  <tr>
+    <td>🛡️ Segurança</td>
+    <td><a href="SECURITY.md"><code>SECURITY.md</code></a></td>
+  </tr>
+  <tr>
+    <td>🗺️ Roadmap</td>
+    <td><a href="ROADMAP.md"><code>ROADMAP.md</code></a></td>
+  </tr>
+  <tr>
+    <td>🫂 Contribuição</td>
+    <td><a href="CONTRIBUTING.md"><code>CONTRIBUTING.md</code></a></td>
+  </tr>
+</table>
 
-- 📄 Arquitetura técnica: [`docs/TECHNICAL.md`](docs/TECHNICAL.md)
-- 🔒 Segurança: [`SECURITY.md`](SECURITY.md)
-- 🛣️ Roadmap: [`ROADMAP.md`](ROADMAP.md)
-- 🤝 Contribuição: [`CONTRIBUTING.md`](CONTRIBUTING.md)
-
-<br>
+---
 
 ## 🔐 Segurança & Privacidade
 
@@ -131,16 +119,14 @@ Consulte [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) para detalhes completos 
 - Arquivos temporários usados durante o upload são eliminados após o processamento
 - Execução em Colab funciona de forma efêmera, com descarte da VM ao final da sessão
 
-📜 Logs de infraestrutura (Colab, VPS, cloud) não são controláveis pelo projeto.
-
-<br>
+> 📜 Logs de infraestrutura (Colab, VPS, cloud) não são controláveis pelo projeto.
 
 ## ⚠️ Aviso Legal
 
-VaultStream é apenas uma ferramenta técnica.  
-O usuário é totalmente responsável por garantir o uso legal do software e dos conteúdos transferidos.
+VaultStream destina-se apenas a conteúdos legais.  
+Os utilizadores são responsáveis pelo cumprimento das leis locais.
 
-<br>
+---
 
 ## 👤 Autor
 
@@ -150,9 +136,7 @@ Desenvolvido com 💡 por **Augusto Mate**
 | :-------: | :-------: |
 | [@augusto-mate](https://github.com/augusto-mate) | [@augusto-mate](https://linkedin.com/in/augusto-mate) |
 
-<br>
-
-## 📝 Licença
+## 📄 Licença
 
 Este projeto está licenciado sob a [MIT License](LICENSE).
 

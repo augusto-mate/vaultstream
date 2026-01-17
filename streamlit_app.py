@@ -1,5 +1,9 @@
 # 👑 streamlit_app.py
 
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 import streamlit as st
 from core.pipeline import run_pipeline
 
@@ -17,3 +21,4 @@ if st.button("Iniciar"):
         st.success("Processo concluído!")
     else:
         st.warning("Cole um magnet link válido.")
+

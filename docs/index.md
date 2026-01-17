@@ -3,7 +3,7 @@
 # VaultStream 🚀
 
 <p align="justify">
-  <img src="/assets/logo.png" alt="VaultStream Logo" width="350">
+  <img src="../assets/logo.png" alt="VaultStream Logo" width="350">
 </p>
 
 > _Security on the move. Automation with purpose._
@@ -36,3 +36,4 @@ VaultStream é uma ferramenta open-source para automação segura de downloads e
 <p align="center">
   <sub>© 2026 VaultStream — Augusto Mate</sub>
 </p>
+

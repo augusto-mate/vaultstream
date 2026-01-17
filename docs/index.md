@@ -3,7 +3,7 @@
 # VaultStream 🚀
 
 <p align="justify">
-  <img src="https://github.com/augusto-mate/vaultstream/blob/main/assets/logo.png" alt="VaultStream Logo" width="350" />
+  <img src="/assets/logo.png" alt="VaultStream Logo" width="350">
 </p>
 
 > _Security on the move. Automation with purpose._
@@ -20,12 +20,10 @@ VaultStream é uma ferramenta open-source para automação segura de downloads e
 - Google Colab / Docker / VPS
 
 
-
 ## Começar
    👉🏾 Veja o [README](https://github.com/augusto-mate/vaultstream/blob/main/README.md) no GitHub  
    👉🏾 Rode no Google Colab  
    👉🏾 Execute como seedbox via Docker
-
 
 
 ## Projeto

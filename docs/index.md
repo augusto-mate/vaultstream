@@ -19,12 +19,14 @@ VaultStream é uma ferramenta open-source para automação segura de downloads e
 - Interface Web (Streamlit)
 - Google Colab / Docker / VPS
 
+<br>
 
 ## Começar
    👉🏾 Veja o [README](https://github.com/augusto-mate/vaultstream/blob/main/README.md) no GitHub  
    👉🏾 Rode no Google Colab  
    👉🏾 Execute como seedbox via Docker
 
+<br>
 
 ## Projeto
 - Licença: [MIT](https://github.com/augusto-mate/vaultstream/blob/main/LICENSE)
@@ -36,5 +38,3 @@ VaultStream é uma ferramenta open-source para automação segura de downloads e
 <p align="center">
   <sub>© 2026 VaultStream — Augusto Mate</sub>
 </p>
-
-

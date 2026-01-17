@@ -1,8 +1,12 @@
 # 👑 streamlit_app.py
 
-import sys
 import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+import sys
+
+# Força o diretório de trabalho para a raiz do projeto
+diretorio_projeto = os.path.dirname(os.path.abspath(__file__))
+os.chdir(diretorio_projeto)
+sys.path.insert(0, diretorio_projeto)
 
 import streamlit as st
 from core.pipeline import run_pipeline
@@ -21,4 +25,5 @@ if st.button("Iniciar"):
         st.success("Processo concluído!")
     else:
         st.warning("Cole um magnet link válido.")
+
 

@@ -1,11 +1,11 @@
 # 🧪 /core/pipeline.py
 
 from config.settings import *
-from core.torrent_downloader import download_torrent
-from core.encrypt import encrypt_folder
-from core.uploader import upload_with_rclone
-from core.cleanup import cleanup_paths
-from core.emailer import send_email
+from .torrent_downloader import download_torrent  
+from .encrypt import encrypt_folder              
+from .uploader import upload_with_rclone         
+from .cleanup import cleanup_paths               
+from .emailer import send_email                  
 
 def run_pipeline(magnet_link: str):
     send_email("VaultStream", "Download iniciado", SMTP_SERVER, SMTP_PORT, EMAIL_FROM, EMAIL_PASS, EMAIL_TO)

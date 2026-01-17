@@ -8,28 +8,17 @@ st.set_page_config(page_title="VaultStream", layout="centered")
 st.title("🚀 VaultStream")
 st.write("Torrent → Criptografia → Nuvem → Limpeza")
 
-# ----------------------------
-# FORM evita reruns constantes
-# ----------------------------
-with st.form("vaultstream_form"):
+with st.form(key="vaultstream_form"):
     magnet_text = st.text_area(
-        "Cole os links magnéticos (um por linha):",
-        height=180,
-        placeholder="magnet:?xt=urn:btih:..."
+        "Cole os magnet links (um por linha):",
+        height=180
     )
 
     zipar = st.checkbox("Criptografar arquivos")
-
-    destino = st.selectbox(
-        "Destino (rclone):",
-        ["GoogleDrive", "OneDrive", "Mega"]
-    )
+    destino = st.selectbox("Destino (rclone)", ["GoogleDrive", "OneDrive", "Mega"])
 
     submit = st.form_submit_button("🚀 Iniciar")
 
-# ----------------------------
-# Execução controlada
-# ----------------------------
 if submit:
     links = [l.strip() for l in magnet_text.splitlines() if l.strip()]
 
@@ -37,10 +26,5 @@ if submit:
         st.error("❌ Cole pelo menos um magnet link válido.")
     else:
         st.success(f"📥 {len(links)} torrent(s) na fila")
-        with st.spinner("Processando torrents..."):
-            run_pipeline(
-                links=links,
-                destino=destino,
-                zipar=zipar
-            )
-        st.success("✅ Processo concluído com sucesso!")
+        run_pipeline(links, destino, zipar)
+        st.success("✅ Finalizado!")

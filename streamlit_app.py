@@ -3,34 +3,44 @@
 import streamlit as st
 from core.pipeline import run_pipeline
 
-# Configuração da página
 st.set_page_config(page_title="VaultStream", layout="centered")
 
-# Header
 st.title("🚀 VaultStream")
-st.write("Torrent    →    Criptografia    →    Nuvem    →    Limpeza")
+st.write("Torrent → Criptografia → Nuvem → Limpeza")
 
-# Campo para múltiplos magnet links
-magnet_text = st.text_area(
-    "Cole os links magnéticos (um por linha):",
-    height=150
-)
+# ----------------------------
+# FORM evita reruns constantes
+# ----------------------------
+with st.form("vaultstream_form"):
+    magnet_text = st.text_area(
+        "Cole os links magnéticos (um por linha):",
+        height=180,
+        placeholder="magnet:?xt=urn:btih:..."
+    )
 
-# Checkbox para criptografia
-zipar = st.checkbox("Criptografar arquivo ZIP")
+    zipar = st.checkbox("Criptografar arquivos")
 
-# Seleção de destino via rclone
-destino = st.selectbox(
-    "Destino:",
-    ["GoogleDrive", "OneDrive", "Mega"]
-)
+    destino = st.selectbox(
+        "Destino (rclone):",
+        ["GoogleDrive", "OneDrive", "Mega"]
+    )
 
-# Botão iniciar
-if st.button("Iniciar"):
-    links = [l.strip() for l in magnet_text.strip().split("\n") if l.strip()]
+    submit = st.form_submit_button("🚀 Iniciar")
+
+# ----------------------------
+# Execução controlada
+# ----------------------------
+if submit:
+    links = [l.strip() for l in magnet_text.splitlines() if l.strip()]
+
     if not links:
-        st.warning("Cole pelo menos um magnet link válido.")
+        st.error("❌ Cole pelo menos um magnet link válido.")
     else:
-        with st.spinner("Processando os torrents..."):
-            run_pipeline(links=links, destino=destino, zipar=zipar)
-        st.success("Todos os torrents foram processados com sucesso!")
+        st.success(f"📥 {len(links)} torrent(s) na fila")
+        with st.spinner("Processando torrents..."):
+            run_pipeline(
+                links=links,
+                destino=destino,
+                zipar=zipar
+            )
+        st.success("✅ Processo concluído com sucesso!")

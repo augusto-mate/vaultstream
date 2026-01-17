@@ -1,9 +1,5 @@
 # 🧪 /core/pipeline.py
 
-import sys
-import os
-
-# Importações absolutas forçadas
 from config.settings import *
 from core.torrent_downloader import download_torrent
 from core.encrypt import encrypt_folder
@@ -21,6 +17,7 @@ def run_pipeline(magnet_link: str):
     cleanup_paths(DOWNLOAD_DIR, ENCRYPTED_DIR)
 
     send_email("VaultStream", "Download concluído com sucesso", SMTP_SERVER, SMTP_PORT, EMAIL_FROM, EMAIL_PASS, EMAIL_TO)
+
 
 
 

@@ -1,15 +1,20 @@
 # 👑 streamlit_app.py
 
-import os
 import sys
+from pathlib import Path
 
-# Garante que o diretório atual (/content/vaultstream) esteja no topo da busca
-current_dir = os.path.dirname(os.path.abspath(__file__))
-if current_dir not in sys.path:
-    sys.path.insert(0, current_dir)
+ROOT_DIR = Path(__file__).resolve().parent
+sys.path.append(str(ROOT_DIR))
 
 import streamlit as st
 from core.pipeline import run_pipeline
+
+st.markdown("""
+    <style>
+    .stProgress > div > div > div > div { background-color: #F9AB00; }
+    .stButton>button { background-color: #F9AB00; color: white; border-radius: 8px; }
+    </style>
+    """, unsafe_allow_html=True)
 
 st.set_page_config(page_title="VaultStream", layout="centered")
 
@@ -25,8 +30,3 @@ if st.button("Iniciar"):
         st.success("Processo concluído!")
     else:
         st.warning("Cole um magnet link válido.")
-
-
-
-
-

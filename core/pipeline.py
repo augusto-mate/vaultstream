@@ -1,12 +1,15 @@
 # 🧪 /core/pipeline.py
 
+import sys
+import os
+
+# Importações absolutas forçadas
 from config.settings import *
-# Importamos diretamente o nome do arquivo, sem o prefixo 'core.'
-from torrent_downloader import download_torrent
-from encrypt import encrypt_folder
-from uploader import upload_with_rclone
-from cleanup import cleanup_paths
-from emailer import send_email     
+from core.torrent_downloader import download_torrent
+from core.encrypt import encrypt_folder
+from core.uploader import upload_with_rclone
+from core.cleanup import cleanup_paths
+from core.emailer import send_email   
 
 def run_pipeline(magnet_link: str):
     send_email("VaultStream", "Download iniciado", SMTP_SERVER, SMTP_PORT, EMAIL_FROM, EMAIL_PASS, EMAIL_TO)
@@ -18,6 +21,7 @@ def run_pipeline(magnet_link: str):
     cleanup_paths(DOWNLOAD_DIR, ENCRYPTED_DIR)
 
     send_email("VaultStream", "Download concluído com sucesso", SMTP_SERVER, SMTP_PORT, EMAIL_FROM, EMAIL_PASS, EMAIL_TO)
+
 
 
 

@@ -2,7 +2,6 @@
 
 import subprocess
 import os
-import re
 
 def download_torrent(magnet_link: str, download_dir: str):
     os.makedirs(download_dir, exist_ok=True)
@@ -12,19 +11,19 @@ def download_torrent(magnet_link: str, download_dir: str):
         "--enable-dht=true",
         "--follow-torrent=mem",
         "--seed-time=0",
-        "--summary-interval=1", # Atualização a cada 1 segundo
+        "--summary-interval=1",           # Atualização a cada 1 segundo
         "--console-log-level=notice",
+        "--max-connection-per-server=16", # Máxima performance
+        "--split=10",                     # Divide o arquivo em 10 partes
+        "--min-split-size=1M",
+        "--optimize-concurrent-downloads=true",
         "-d", download_dir,
         magnet_link
     ]
 
     # Usamos Popen para ler a saída em tempo real
     process = subprocess.Popen(
-        cmd, 
-        stdout=subprocess.PIPE, 
-        stderr=subprocess.STDOUT, 
-        text=True, 
-        bufsize=1
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1
     )
 
     print(f"📡 Conectando aos peers para: {magnet_link[:50]}...")
@@ -40,3 +39,4 @@ def download_torrent(magnet_link: str, download_dir: str):
     process.wait()
     if process.returncode != 0:
         yield f"❌ Erro no Aria2 (Código {process.returncode})"
+        

@@ -1,2 +1,16 @@
+# Interface e Servidor Web (UX)
 gradio
-aria2
+
+# Processamento de Arquivos e Criptografia
+py7zr
+
+# Monitoramento de Sistema (Excelência Máxima)
+psutil
+
+# Gerenciamento de Ambiente e Logs
+python-dotenv
+
+# Utilitário de Sistema e Feedback
+tqdm
+
+# Nota: aria2c e rclone são binários do sistema instalados via apt/curl no notebook.

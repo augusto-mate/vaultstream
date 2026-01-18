@@ -16,11 +16,12 @@ def upload_with_rclone(file_path: str, remote: str, folder: str):
         raise FileNotFoundError(f"O caminho {file_path} não existe")
 
     cmd = [
-        "rclone", "copy",
-        file_path, f"{remote}:{folder}",
+        "rclone", "copy", file_path, f"{remote}:{folder}",
         "-P",                 # Flag de progresso
         "--stats", "1s",      # Atualiza status a cada 1 segundo
-        "--stats-one-line"    # Mantém o log limpo
+        "--stats-one-line",   # Mantém o log limpo
+        "--transfers=8",      # Sobe 8 arquivos/partes simultaneamente
+        "--checkers=16"       # Verifica integridade em paralelo
     ]
 
     process = subprocess.Popen(
@@ -35,3 +36,4 @@ def upload_with_rclone(file_path: str, remote: str, folder: str):
     process.wait()
     if process.returncode != 0:
         yield "❌ Erro durante o upload para a nuvem."
+        

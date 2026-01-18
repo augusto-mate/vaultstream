@@ -19,15 +19,23 @@ def run_pipeline(magnet_link: str):
     """
     Executa o fluxo completo com feedback em tempo real para a UI.
     """
+    # Não falha o pipeline se o envio inicial falhar
     yield "📧 Enviando notificação de início..."
     try:
         send_email("VaultStream", "Download iniciado", SMTP_SERVER, SMTP_PORT, EMAIL_FROM, EMAIL_PASS, EMAIL_TO)
     except Exception as e:
         yield f"⚠️ Falha no email (opcional): {str(e)}"
 
+    # Feedback curto com o link (limitado para manter o UI responsivo)
+    yield f"🔄 Iniciando Pipeline para: {magnet_link[:40]}..."
+    
     # Informações do sistema (antes de iniciar)
     yield get_sys_info()
 
+    # Notificação Inicial específica do pipeline (log iterável)
+    for log in send_email("Tarefa Iniciada", f"O download do magnet {magnet_link[:30]} começou.", SMTP_SERVER, SMTP_PORT, EMAIL_FROM, EMAIL_PASS, EMAIL_TO):
+        yield log
+    
     # 1. DOWNLOAD (Motor Aria2)
     yield "📡 Conectando aos peers e iniciando download..."
     for status in download_torrent(magnet_link, DOWNLOAD_DIR):
@@ -54,8 +62,16 @@ def run_pipeline(magnet_link: str):
         cleanup_paths(DOWNLOAD_DIR, ENCRYPTED_DIR)
     except Exception as e:
         yield f"⚠️ Falha na limpeza: {str(e)}"
+
+    yield get_sys_info()
+
+    # Notificação Final (async/iterável de logs)
+    for log in send_email("Tarefa Concluída", "O arquivo foi processado e enviado para a nuvem.", SMTP_SERVER, SMTP_PORT, EMAIL_FROM, EMAIL_PASS, EMAIL_TO):
+        yield log
     
-        # 5. FINALIZAÇÃO
+    yield "🏁 [CONCLUÍDO] Sistema em standby."
+	
+    # 5. FINALIZAÇÃO
     yield "✅ TUDO PRONTO: Download, criptografia e upload concluídos!"
     
     try:

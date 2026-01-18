@@ -1,5 +1,6 @@
-# 🧪 core/pipeline.py
+# 🧪 /core/pipeline.py
 
+import os
 from config.settings import *
 from core.torrent_downloader import download_torrent
 from core.encrypt import encrypt_folder
@@ -7,57 +8,43 @@ from core.uploader import upload_with_rclone
 from core.cleanup import cleanup_paths
 from core.emailer import send_email
 
-def run_pipeline(links, destino, zipar=False):
-    for idx, magnet in enumerate(links, 1):
-        try:
-            # Email: download iniciado
-            send_email(
-                subject=f"VaultStream | Início {idx}/{len(links)}",
-                body=f"Iniciando download:\n{magnet}",
-                smtp_server=SMTP_SERVER,
-                smtp_port=SMTP_PORT,
-                email_from=EMAIL_FROM,
-                email_pass=EMAIL_PASS,
-                email_to=EMAIL_TO,
-            )
+def run_pipeline(magnet_link: str):
+    """
+    Executa o fluxo completo com feedback em tempo real para a UI.
+    """
+    yield "📧 Enviando notificação de início..."
+    try:
+        send_email("VaultStream", "Download iniciado", SMTP_SERVER, SMTP_PORT, EMAIL_FROM, EMAIL_PASS, EMAIL_TO)
+    except Exception as e:
+        yield f"⚠️ Falha no email (opcional): {str(e)}"
 
-            # Download torrent
-            download_torrent(magnet, DOWNLOAD_DIR)
-            
-            # Criptografia opcional
-            final_path = DOWNLOAD_DIR
-            if zipar:
-                final_path = encrypt_folder(
-                    DOWNLOAD_DIR,
-                    ENCRYPTED_DIR,
-                    ZIP_PASSWORD
-                )
+    # 1. DOWNLOAD (Motor Aria2)
+    yield "📡 Conectando aos peers e iniciando download..."
+    for status in download_torrent(magnet_link, DOWNLOAD_DIR):
+        yield status
 
-            # Upload via rclone
-            upload_with_rclone(final_path, destino, RCLONE_FOLDER)
+    # 2. CRIPTOGRAFIA (7-Zip)
+    yield "🔐 Iniciando criptografia com senha (7-Zip)..."
+    encrypted_file = ""
+    for status in encrypt_folder(DOWNLOAD_DIR, ENCRYPTED_DIR, ZIP_PASSWORD):
+        if "✅ Arquivo gerado" in status:
+            encrypted_file = status.split(": ")[1]
+        yield status
 
-            # Cleanup
-            cleanup_paths(DOWNLOAD_DIR, ENCRYPTED_DIR)
-            
-            # Email: download concluído
-            send_email(
-                subject=f"VaultStream | Concluído {idx}/{len(links)}",
-                body=f"Torrent enviado para {destino}",
-                smtp_server=SMTP_SERVER,
-                smtp_port=SMTP_PORT,
-                email_from=EMAIL_FROM,
-                email_pass=EMAIL_PASS,
-                email_to=EMAIL_TO,
-            )
-            
-        except Exception as e:
-            send_email(
-                subject="VaultStream | Erro",
-                body=str(e),
-                smtp_server=SMTP_SERVER,
-                smtp_port=SMTP_PORT,
-                email_from=EMAIL_FROM,
-                email_pass=EMAIL_PASS,
-                email_to=EMAIL_TO,
-            )
-            raise
+    # 3. UPLOAD (Rclone)
+    yield f"🚀 Iniciando upload para {RCLONE_REMOTE}..."
+    for status in upload_with_rclone(encrypted_file, RCLONE_REMOTE, RCLONE_FOLDER):
+        yield status
+
+    # 4. LIMPEZA
+    yield "🧹 Realizando limpeza de arquivos temporários..."
+    cleanup_paths(DOWNLOAD_DIR, ENCRYPTED_DIR)
+    
+    # 5. FINALIZAÇÃO
+    yield "✅ TUDO PRONTO: Download, criptografia e upload concluídos!"
+    
+    try:
+        send_email("VaultStream", "Download concluído com sucesso", SMTP_SERVER, SMTP_PORT, EMAIL_FROM, EMAIL_PASS, EMAIL_TO)
+    except:
+        pass
+        

@@ -22,3 +22,7 @@ SMTP_PORT = int(os.getenv("SMTP_PORT", 465))
 EMAIL_FROM = os.getenv("EMAIL_FROM")
 EMAIL_PASS = os.getenv("EMAIL_PASS")
 EMAIL_TO = os.getenv("EMAIL_TO")
+
+# Adicionamos a criação automática de pastas para evitar erros de "Pasta não encontrada" no primeiro run.
+os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+os.makedirs(ENCRYPTED_DIR, exist_ok=True)

@@ -1,5 +1,6 @@
+
 # 📄 /docs/_config.yml
 
-theme: jekyll-theme-minimal
+theme: jekyll-theme-cayman
 title: VaultStream
-description: Secure torrent to cloud automation
+description: Secure automation from torrent to cloud

@@ -3,4 +3,4 @@
 theme: jekyll-theme-slate
 title: VaultStream
 description: Secure automation from torrent to cloud
-show_downloads: true
+show_downloads: false

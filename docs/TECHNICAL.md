@@ -36,48 +36,9 @@ Cada etapa é desacoplada para facilitar manutenção e extensões.
 
 ---
 
-## 🗂️ Estrutura do projeto
+## 📁 Estrutura do projeto
 
-```css
-vaultstream/
-├── .github							# CI/CD
-│   └── workflows
-│   	└── ci.yml
-├── .gitignore 						# Previne vazamento, ruído em PRs e erros comuns
-├── assets							# Recursos estáticos
-│   └── logo.png
-├── config/							# Configurações do projeto
-│   └── settings.py
-├── core/							# Núcleo/implementação principal
-│   ├── __init__.py
-│   ├── cleanup.py
-│   ├── emailer.py
-│   ├── encrypt.py
-│   ├── pipeline.py
-│   ├── torrent_downloader.py
-│   └── uploader.py
-├── docker/							# Configurações de ambiente/container
-│   ├── docker-compose.yml
-│   └── Dockerfile
-├── docs/							# Documentação adicional
-│   ├── ARCHITECTURE.md
-│   ├── flow.md
-│   └── TECHNICAL.md
-├── examples/						# Exemplos/Seeds de dados
-│   ├── .env						# NÃO versionar
-│   └── magnets.txt
-├── notebooks/						# Notebooks para reprodução/experimentos
-│   └── vaultstream_colab.ipynb
-├── CHANGELOG.md					# Histórico de alterações
-├── CONTRIBUTING.md					# Guia de contribuição
-├── LICENSE							# Licença
-├── main.py							# Ponto de entrada
-├── README.md						# Visão geral do projeto, instruções rápidas
-├── requirements.txt		    	# Dependências principais
-├── ROADMAP.md						# Planos futuros
-├── SECURITY.md						# Boas práticas de segurança 
-└── streamlit_app.py		    	# App Streamlit
-```
+Consulte [`ARCHITECTURE.md`](ARCHITECTURE.md) para detalhes completos sobre a árvore de diretórios, responsabilidades por pasta, arquivos-chave e fluxos de build e testes.
 
 ---
 
@@ -86,11 +47,13 @@ vaultstream/
 ### Tecnologia
 
 - **aria2**
-- Motivos:
-	- estável
-	- suporta magnet links
-	- excelente desempenho
-	- fácil automação
+
+### Benefícios
+
+- Estabilidade
+- Suporte a magnet links
+- Excelente desempenho
+- Facilidade de automação
 
 ### Execução
 
@@ -142,7 +105,7 @@ vaultstream/
 ### Eventos monitorados
 
 - início do download
-- progresso (opcional)
+- progresso 
 - falha
 - conclusão
 
@@ -190,6 +153,8 @@ Objetivo:
 ```text
 User → UI → aria2 → encrypt → rclone → cloud → cleanup → notify
 ```
+
+Veja o diagrama completo do fluxo de dados e das etapas do pipeline em [`flow.md`](flow.md).
 
 ---
 

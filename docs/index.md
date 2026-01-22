@@ -14,10 +14,6 @@
   <img src="assets/logo.svg" alt="VaultStream Logo" width="400">
 </p>
 
-<div align="center">
-  <blockquote><i>Security on the move — Automation with purpose</i></blockquote>
-</div>
-
 VaultStream é uma solução de alta performance desenvolvida para automatizar o ciclo de vida de arquivos magnet. Utilizando o motor **Aria2c** para download e **Rclone** para sincronização em nuvem, ele garante que seus dados sejam movidos com velocidade e segurança militar.
 
 ## 💎 Recursos de Elite
@@ -53,10 +49,8 @@ Acesse o notebook oficial e execute as células de configuração:
 Desenvolvido por **Augusto Mate**.  
 "Eficiência é o que move o VaultStream."
 
-<br>
+---
 
 <p align="center">
   <sub>© 2026 VaultStream — Augusto Mate</sub>
 </p>
-
-

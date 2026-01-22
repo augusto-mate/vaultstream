@@ -11,20 +11,14 @@
 </div>
 
 <p align="center">
-  <img src="assets/logo.svg" alt="VaultStream Logo" width="350">
+  <img src="assets/logo.svg" alt="VaultStream Logo" width="400">
 </p>
 
-<div align="center"> 
-  
-  <blockquote> <i> Security on the move. Automation with purpose. </i> </blockquote>
-
+<div align="center">
+  <blockquote><i>Security on the move — Automation with purpose</i></blockquote>
 </div>
 
-<br>
-
 VaultStream é uma solução de alta performance desenvolvida para automatizar o ciclo de vida de arquivos magnet. Utilizando o motor **Aria2c** para download e **Rclone** para sincronização em nuvem, ele garante que seus dados sejam movidos com velocidade e segurança militar.
-
----
 
 ## 💎 Recursos de Elite
 
@@ -54,8 +48,6 @@ Acesse o notebook oficial e execute as células de configuração:
 2. Configure seu remote (`rclone config`).
 3. Inicie o app (`python ui/gradio_app.py`).
 
----
-
 ## 👨🏽‍💻 Créditos
 
 Desenvolvido por **Augusto Mate**.  
@@ -66,4 +58,5 @@ Desenvolvido por **Augusto Mate**.
 <p align="center">
   <sub>© 2026 VaultStream — Augusto Mate</sub>
 </p>
+
 

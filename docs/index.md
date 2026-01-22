@@ -4,9 +4,9 @@
 
 <div align="center">
   
-  ![License: MIT](https://img.shields.io/github/license/augusto-mate/vaultstream?color=orange)
-  ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
-  ![Status](https://img.shields.io/badge/status-production--ready-green)
+  <img alt="License" src="https://img.shields.io/github/license/augusto-mate/vaultstream?color=orange" />
+  <img alt="Python" src="https://img.shields.io/badge/python-3.10%2B-blue" />
+  <img alt="Status" src="https://img.shields.io/badge/status-production--ready-green" />
 
 </div>
 
@@ -16,7 +16,7 @@
 
 <div align="center"> 
   
-  > <i> Security on the move. Automation with purpose. </i>
+  <blockquote> <i> Security on the move. Automation with purpose. </i> </blockquote>
 
 </div>
 
@@ -66,3 +66,4 @@ Desenvolvido por **Augusto Mate**.
 <p align="center">
   <sub>© 2026 VaultStream — Augusto Mate</sub>
 </p>
+

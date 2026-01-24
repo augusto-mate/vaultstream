@@ -15,7 +15,7 @@ def get_sys_info():
     ram = psutil.virtual_memory()
     return f"📊 [SYS] Disco Livre: {disk.free // (2**30)}GB | RAM: {ram.percent}%"
 
-def run_pipeline(magnet_link: str):
+def run_pipeline(magnet_link: str, use_encryption: bool):
     """
     Executa o fluxo completo com feedback em tempo real para a UI.
     """
@@ -43,18 +43,31 @@ def run_pipeline(magnet_link: str):
     
     yield get_sys_info()
 
-    # 2. CRIPTOGRAFIA (7-Zip)
-    yield "🔐 Iniciando criptografia com senha (7-Zip)..."
-    encrypted_file = ""
-    for status in encrypt_folder(DOWNLOAD_DIR, ENCRYPTED_DIR, ZIP_PASSWORD):
-        if "✅ Arquivo gerado" in status:
-            encrypted_file = status.split(": ")[1]
-        yield status
+    # 2. Processamento de Arquivo com Senha (7-Zip)
+    final_path = ""
+	# CRIPTOGRAFIA DIRETO
+	if use_encryption:
+		yield "🔐 Criptografia ativada. Processando..."
+    	for status in encrypt_folder(DOWNLOAD_DIR, ENCRYPTED_DIR, ZIP_PASSWORD):
+        	if "✅ Arquivo gerado" in status:
+            	final_path = status.split(": ")[1].strip()
+        	yield status
+	# CRIPTOGRAFIA OPCIONAL
+	else:
+		yield "⏩ Criptografia ignorada. Preparando arquivos originais..."
+        # Pega a primeira pasta/arquivo dentro do download_dir para subir
+        items = os.listdir(DOWNLOAD_DIR)
+        if items:
+            final_path = os.path.join(DOWNLOAD_DIR, items[0])
+        else:
+            yield "❌ Erro: Nenhum arquivo baixado encontrado."
+            return
 
     # 3. UPLOAD (Rclone)
-    yield f"🚀 Iniciando upload para {RCLONE_REMOTE}..."
-    for status in upload_with_rclone(encrypted_file, RCLONE_REMOTE, RCLONE_FOLDER):
-        yield status
+	if final_path and os.path.exists(final_path):
+		yield f"🚀 Enviando para a Nuvem: {os.path.basename(final_path)}..."
+    	for status in upload_with_rclone(final_path, RCLONE_REMOTE, RCLONE_FOLDER):
+        	yield status
 
     # 4. LIMPEZA
     yield "🧹 Realizando limpeza de arquivos temporários..."
@@ -79,4 +92,4 @@ def run_pipeline(magnet_link: str):
     except:
         # Não falha o pipeline se o envio final falhar
         pass
-        
+     

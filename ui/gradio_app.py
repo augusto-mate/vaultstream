@@ -3,7 +3,6 @@
 import os
 import sys
 import gradio as gr
-from typing import List
 
 # Configurações de path e imports
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -12,26 +11,8 @@ if ROOT_DIR not in sys.path:
 
 from core.pipeline import run_pipeline
 
-# utilidades
-def is_magnet_link(link: str) -> bool:
-    """
-    Verifica de forma simples se a linha parece ser um magnet link.
-    Não é uma validação completa de URL, apenas uma checagem rápida para UX.
-    """
-    if not link:
-        return False
-        l = link.strip().lower()
-        return l.startswith("magnet:?xt=urn:btih:")
-
-def validate_links(links: List[str]) -> bool:
-    """
-    Valida rapidamente se ao menos um dos links é magnet.
-    Pode ser expandida para validação mais rigorosa.
-    """
-    return any(is_magnet_link(l) for l in links)
-
 # Lógica de processamento (UI separada)
-def process_links_with_logs(magnets_text: str):
+def process_links_with_logs(magnets_text):
     """
     Processa uma lista de magnet links (um por linha), chamando o pipeline real e emitindo logs incrementalmente para a UI.
 
@@ -46,11 +27,7 @@ def process_links_with_logs(magnets_text: str):
     
     # Validação inicial
     if not links:
-        yield "❌ Erro", "Nenhum link detectado. Cole pelo menos um magnet link, um por linha."
-        return
-
-    if not validate_links(links):
-        yield "❌ Erro", "Nenhum magnet link válido detectado. Verifique o formato: magnet:?xt=urn:btih:..."
+        yield "❌ Erro", "Nenhum link detectado."
         return
 
     # Acúmulo de logs para apresentação incremental
@@ -75,12 +52,12 @@ with gr.Blocks(css=custom_css, title="VaultStream Elite") as demo:
     
     with gr.Row():
         with gr.Column(scale=1):
-            magnets_input = gr.Textbox(label="🔗 Magnet Links", placeholder="Cole aqui o magnet link completo", lines=10)
+            magnets_input = gr.Textbox(label="🔗 Magnet Links", placeholder="Cole aqui...", lines=10)
             btn = gr.Button("🚀 INICIAR OPERAÇÃO", variant="primary")
         
         with gr.Column(scale=2):
             status = gr.Textbox(value="Aguardando comando...")
-            console = gr.Textbox(label="Terminal de Operações (Logs em Tempo Real)", lines=15, elem_id="console-box", interactive=False)
+            console = gr.Textbox(label="Terminal de Saída", lines=15, elem_id="console-box", interactive=False)
 
         # A função process_links_with_logs recebe magnets_input como input e produz outputs status e console de logs
         btn.click(fn=process_links_with_logs, inputs=magnets_input, outputs=[status, console])

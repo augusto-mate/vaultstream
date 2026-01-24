@@ -1,145 +1,83 @@
-# VaultStream 🚀
+# 🚀 VaultStream 
 
-![Open Source](https://img.shields.io/badge/Open%20Source-100%25-6AA84F)
-![License](https://img.shields.io/badge/License-MIT-16A34A)
-![Python](https://img.shields.io/badge/Python-3.9+-3B82F6)
-![Docker](https://img.shields.io/badge/Docker-Ready-0D6EFD)
-![Colab](https://img.shields.io/badge/Google%20Colab-Ready-F9AB00)
-![Cloud](https://img.shields.io/badge/Cloud-First-E67E22)
+![VaultStream](https://img.shields.io/badge/Security_on_the_move-Automation_with_purpose-6A737D?labelColor=DCDCDC)
 
-<br>
+**O pipeline definitivo para processamento de torrents: Download → Criptografia → Nuvem → Limpeza.**  
 
-**VaultStream** é um projeto **open-source** que automatiza o fluxo completo:
+## 📝 O que é o VaultStream?
 
-> **Torrent → Criptografia → Nuvem → Limpeza automática**
+**VaultStream** é uma ferramenta poderosa e automatizada projetada para capturar Magnet Links, baixar o conteúdo via Aria2, aplicar criptografia AES-256 (via 7-Zip) e realizar o upload direto para sua nuvem favorita (Google Drive, OneDrive, MEGA, S3, etc.) utilizando Rclone. Tudo isso com uma interface web moderna e feedback em tempo real.
 
-Com foco em **privacidade**, **simplicidade** e **execução na nuvem**.
+### Diferenciais
 
----
+- **Interface Gradio**: Interface web limpa e responsiva acessível por link público via Colab.
+- **Feedback Estilo qBittorrent**: Acompanhe velocidade, peers e progresso de cada etapa em tempo real.
+- **Segurança**: Criptografia de nível militar nos seus arquivos antes de subirem para a nuvem.
+- **Eficiência**: Motor Aria2 para downloads ultra-rápidos com DHT habilitado.
+- **Autolimpeza**: Gerenciamento inteligente de disco para evitar lotação em ambientes como o Google Colab.
 
-## ✨ Funcionalidades Principais
+## 🛠️ Arquitetura
 
-- ⬇️ Download de torrents via magnet (aria2)
-- 🗝️ Criptografia forte **AES-256** (7-Zip)
-- ☁️ Upload automático para:
-  - Google Drive
-  - OneDrive
-  - Mega.nz
-- 📧 Notificações por e-mail (início, progresso, falha, sucesso)
-- 🧹 Remoção segura de arquivos locais (anti-rastros)
-- 🌐 Interface web via **Streamlit**
-- 🐳 Suporte a Docker / VPS
-- 🧪 Compatível com **Google Colab**
-- 🆓 Totalmente gratuito e com código-fonte aberto
+O sistema é dividido em módulos especializados:
+- `core/torrent_downloader.py`: Gerencia o motor de download Aria2.
+- `core/encrypt.py`: Responsável pela compressão e senha dos arquivos.
+- `core/uploader.py`: Interface de comunicação com o Rclone.
+- `core/pipeline.py`: O orquestrador que une todas as etapas com logs em tempo real.
 
-## 🔀️ Fluxo
-
-```text
-Torrent
-  ↓
-Cloud 
-  ↓
-Email 
-```
-
-Veja o diagrama completo em [`docs/flow.md`](docs/flow.md).
-
----
-
-## ⚙️ Guia Prático de Execução em Ambientes
+## 💻 Como executar 
 
 ### Google Colab (recomendado)
 
-Clique no botão abaixo:
+1. Clique no botão abaixo para abrir o arquivo `VaultStream_Gradio.ipynb` no Colab.  
+[![Colab](https://img.shields.io/badge/📓_Open_in_Colab-6A737D?style=for-the-badge)](https://colab.research.google.com/github/augusto-mate/vaultstream/blob/main/notebooks/vaultstream_colab.ipynb)
+2. Execute a **Fase 1** para instalar as dependências.
+3. Sincronize seu repositório na **Fase 2**.
+4. Configure seu provedor de nuvem na **Fase 3** (`rclone config`).
+5. Inicie a interface na **Fase 4** e acesse o link público gerado.
 
-[![Colab](https://img.shields.io/badge/VaultStream-📓_Abrir_no_Colab-F9AB00?style=for-the-badge&logo=google-colab&logoColor=F9AB00)](https://colab.research.google.com/github/augusto-mate/vaultstream/blob/main/notebooks/vaultstream_colab.ipynb)
+### Docker / VPS 
 
-O notebook:
-- instala dependências
-- configura o ambiente
-- executa o VaultStream
+1. Suba os containers com Docker Compose: ```docker compose up -d```
+2. Acesse a interface web na porta `7860` (ex.: `http://localhost:7860`).
 
-📌 _Na Fase 3, interaja com o terminal para configurar sua nuvem._
+> Ideal para downloads longos, execução 24/7 e automação contínua.  
 
-### Interface Web (Streamlit)
+## ⚙️ Variáveis de Ambiente
 
-Após iniciar:
-
-```bash
-streamlit run streamlit_app.py
-```
-
-- Colab: acesso via link público
-- VPS/Docker: `http://localhost:8501`
-
-### Docker (seedbox real)
-
-```bash
-docker compose up -d
-```
-
-Ideal para:
-- downloads longos
-- execução 24/7
-- automação contínua
+O sistema utiliza as seguintes variáveis (configuráveis via Colab Secrets ou arquivo `.env`):
+- `ZIP_PASSWORD`: Senha para a criptografia dos arquivos.
+- `RCLONE_REMOTE`: Nome do remote configurado no Rclone (ex: `gdrive`).
+- `RCLONE_FOLDER`: Pasta de destino na nuvem.
 
 ---
-
-## 📁 Estrutura do Projeto
-
-Consulte [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) para detalhes completos da árvore de diretórios, responsabilidades de cada pasta, arquivo e fluxos de build/teste. 
-
-## 📚 Documentação
-
-<table>
-  <tr>
-    <td>📝 Arquitetura técnica</td>
-    <td><a href="docs/TECHNICAL.md"><code>docs/TECHNICAL.md</code></a></td>
-  </tr>
-  <tr>
-    <td>🛡️ Segurança</td>
-    <td><a href="SECURITY.md"><code>SECURITY.md</code></a></td>
-  </tr>
-  <tr>
-    <td>🗺️ Roadmap</td>
-    <td><a href="ROADMAP.md"><code>ROADMAP.md</code></a></td>
-  </tr>
-  <tr>
-    <td>🫂 Contribuição</td>
-    <td><a href="CONTRIBUTING.md"><code>CONTRIBUTING.md</code></a></td>
-  </tr>
-</table>
-
----
-
-## 🔐 Segurança & Privacidade
-
-- Implementação de criptografia AES-256 para proteção de dados 
-- Não existem credenciais codificadas no código
-- Arquivos temporários usados durante o upload são eliminados após o processamento
-- Execução em Colab funciona de forma efêmera, com descarte da VM ao final da sessão
-
-> 📜 Logs de infraestrutura (Colab, VPS, cloud) não são controláveis pelo projeto.
 
 ## ⚠️ Aviso Legal
 
-VaultStream destina-se apenas a conteúdos legais.  
-Os utilizadores são responsáveis pelo cumprimento das leis locais.
+> **VaultStream destina-se apenas a conteúdos legais.**  
+> **Os utilizadores são responsáveis pelo cumprimento das leis locais.**
 
 ---
 
-## 👤 Autor
+## 📚 Documentação
 
-Desenvolvido com 💡 por **Augusto Mate**  
+Nesta secção encontra os principais recursos para compreender, manter e evoluir o projeto:
+- [`docs/TECHNICAL.md`](docs/TECHNICAL.md): Arquitetura técnica.  
+- [`SECURITY.md`](SECURITY.md): Segurança.  
+- [`ROADMAP.md`](ROADMAP.md): Roadmap.   
+- [`CONTRIBUTING.md`](CONTRIBUTING.md): Contribuição.
 
-| 🐙 GitHub | 🔗 LinkedIn |
-| :-------: | :-------: |
-| [@augusto-mate](https://github.com/augusto-mate) | [@augusto-mate](https://linkedin.com/in/augusto-mate) |
+## 👨🏽‍💻 Desenvolvedor
 
-## 📄 Licença
+Criado por **Augusto Mate** — 2026.  
+Conecte-se comigo no [GitHub](https://github.com/augusto-mate) e no [LinkedIn](https://www.linkedin.com/in/augusto-mate).
 
-Este projeto está licenciado sob a [MIT License](LICENSE).
+## 📄  Licença
+
+Este projeto está licenciado sob a **MIT License**.  
+Consulte [LICENSE](LICENSE) para mais detalhes.
 
 ---
 
-> **Última atualização:** Janeiro 2026
+### 📖 Inspiração
+
+> "O Senhor guardará a tua saída e a tua entrada, desde agora e para sempre." — **Salmos 121:8**

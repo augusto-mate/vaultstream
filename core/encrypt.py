@@ -8,32 +8,32 @@ def encrypt_folder(source_dir: str, output_dir: str, password: str):
     output_file = os.path.join(output_dir, "vaultstream_encrypted.7z")
 
     # -mhe=on: Criptografa nomes de arquivos (essencial para o Drive não ver)
-    # -mx=1: Compressão "Fastest" (evita travar a CPU por horas)
+    # -mx0: Modo "Copy" (Sem compressão, apenas senha. É instantâneo!)
     # -p: Senha
     cmd = [
-        "7z", "a", f"-p{password}", "-mhe=on", "-mx=1",
-        output_file, source_dir
+        "7z", "a", f"-p{password}", "-mhe=on", "-mx0",
+        output_file, f"{source_dir}/*"
     ]
 
-    yield f"🔐 Iniciando criptografia rápida (AES-256)..."
+    yield f"🔐 Gerando container criptografado (Modo Ultra-Rápido)..."
 
     try:
         # O 7-zip é pesado, capturar cada linha de progresso no Gradio pode causar o deadlock
-        process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+        result = subprocess.run(cmd, capture_output=True, text=True)
     
         # Monitoramento simples para não travar
-        while True:
-            line = process.stdout.readline()
-            if not line and process.poll() is not None:
-                break
+        #while True:
+            #line = process.stdout.readline()
+            #if not line and process.poll() is not None:
+                #break
             # Apenas envia logs de arquivos grandes ou progresso em blocos
-            if "Compressing" in line or "Everything is Ok" in line:
-                yield f"⚡ {line.strip()}"
+            #if "Compressing" in line or "Everything is Ok" in line:
+                #yield f"⚡ {line.strip()}"
 
-        if process.returncode == 0:
+        if result.returncode == 0:
             yield f"✅ Arquivo gerado: {output_file}"
         else:
-            yield "❌ Erro na criptografia. Verifique espaço em disco."
+            yield "❌ Erro na criptografia: {result.stderr[:200]}"
 
     except Exception as e:
         yield f"⚠️ Falha crítica no 7z: {str(e)}"

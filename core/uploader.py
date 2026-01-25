@@ -12,11 +12,14 @@ def upload_with_rclone(file_path: str, remote: str, folder: str):
         remote (str): nome do remote configurado no rclone (Google Drive, OneDrive, Mega)
         folder (str): pasta destino dentro do remote
     """
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"O caminho {file_path} não existe")
+    # Normaliza o caminho para absoluto
+    abs_path = os.path.abspath(file_path)
+    # Valida a existência antes de prosseguir (usando o caminho absoluto)
+    if not os.path.exists(abs_path):
+        raise FileNotFoundError(f"O caminho {abs_path} não existe.")
 
     cmd = [
-        "rclone", "copy", file_path, f"{remote}:{folder}",
+        "rclone", "copy", abs_path, f"{remote}:{folder}",
         "-P",                 # Flag de progresso
         "--stats", "1s",      # Atualiza status a cada 1 segundo
         "--stats-one-line",   # Mantém o log limpo

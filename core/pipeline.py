@@ -47,20 +47,20 @@ def run_pipeline(magnet_link: str, use_encryption: bool):
     final_path = ""
 	# CRIPTOGRAFIA DIRETO
 	if use_encryption:
-		yield "🔐 Criptografia ativada. Processando..."
+		yield "🔐 Criptografia ativada (AES-256). Processando..."
     	for status in encrypt_folder(DOWNLOAD_DIR, ENCRYPTED_DIR, ZIP_PASSWORD):
         	if "✅ Arquivo gerado" in status:
             	final_path = status.split(": ")[1].strip()
         	yield status
 	# CRIPTOGRAFIA OPCIONAL
 	else:
-		yield "⏩ Criptografia ignorada. Preparando arquivos originais..."
+		yield "⏩ Criptografia ignorada. Preparando arquivos..."
         # Pega a primeira pasta/arquivo dentro do download_dir para subir
         items = os.listdir(DOWNLOAD_DIR)
         if items:
             final_path = os.path.join(DOWNLOAD_DIR, items[0])
         else:
-            yield "❌ Erro: Nenhum arquivo baixado encontrado."
+            yield "❌ Erro: Nenhum arquivo encontrado para upload."
             return
 
     # 3. UPLOAD (Rclone)
@@ -93,3 +93,4 @@ def run_pipeline(magnet_link: str, use_encryption: bool):
         # Não falha o pipeline se o envio final falhar
         pass
      
+

@@ -12,9 +12,9 @@ if ROOT_DIR not in sys.path:
 from core.pipeline import run_pipeline
 
 # Lógica de processamento (UI separada)
-def process_links_with_logs(magnets_text, use_encryption):
+def process_links_with_logs(magnets_text, use_encryption, rclone_remote, rclone_folder, email_target):
     """
-    Processa uma lista de magnet links (um por linha), chamando o pipeline real e emitindo logs incrementalmente para a UI.
+    Processa uma lista de magnet links, chamando o pipeline real e emitindo logs incrementalmente para a UI.
 
     Args:
         magnets_text: texto indicando um ou mais links, um por linha.
@@ -35,7 +35,7 @@ def process_links_with_logs(magnets_text, use_encryption):
     # Feedback visual 
     for link in links:
         # Aqui processa o pipeline real para o link atual
-        for step_log in run_pipeline(link, use_encryption):
+        for step_log in run_pipeline(link, use_encryption, rclone_remote, rclone_folder, email_target):
             full_log += step_log + "\n"
             yield "🔄 Processando...", full_log
 
@@ -51,21 +51,26 @@ with gr.Blocks(css=custom_css, title="VaultStream Elite") as demo:
     
     with gr.Row():
         with gr.Column(scale=1):
-            magnets_input = gr.Textbox(label="🔗 Magnet Links", placeholder="Cole seus links aqui...\nAceita múltiplos links (um por linha).\nRecomendado: Até 5 links por vez.", lines=8)
-            
-            encrypt_check = gr.Checkbox(label="🔐 Ativar Criptografia AES-256", value=True)
+            magnets_input = gr.Textbox(label="🔗 Magnet Links", placeholder="Cole seus links aqui...\nAceita múltiplos links (um por linha).\nRecomendado: Até 5 links por vez.", lines=5)
+
+            with gr.Accordion("⚙️ Configurações de Destino", open=True):
+                remote_input = gr.Textbox(label="☁️ Rclone Remote", placeholder="Ex: gdrive, mega, onedrive")
+                folder_input = gr.Textbox(label="📂 Pasta Destino", placeholder="Ex: VaultStream/Torrents")
+                email_input = gr.Textbox(label="📧 Notificar por E-mail (Opcional)", placeholder="seu-email@gmail.com")
+                
+            encrypt_check = gr.Checkbox(label="🔐 Ativar Criptografia AES-256", value=False)
             
             with gr.Row():
                 btn_run = gr.Button("🚀 INICIAR", variant="primary")
                 btn_clear = gr.Button("🧹 LIMPAR")
         
         with gr.Column(scale=2):
-            status = gr.Label(value="Aguardando comando...")
-            console = gr.Textbox(label="Terminal de Saída", lines=12, elem_id="console-box", interactive=False)
+            status = gr.Textbox(value="Aguardando comando...")
+            console = gr.Textbox(label="Terminal de Saída", lines=15, elem_id="console-box", interactive=False)
 
         # A função process_links_with_logs recebe magnets_input como input e produz outputs status e console de logs
-        btn_run.click(fn=process_links_with_logs, inputs=[magnets_input, encrypt_check], outputs=[status, console])
-        btn_clear.click(fn=lambda: ("", "Standby", ""), outputs=[magnets_input, status, console])
+        btn_run.click(fn=process_links_with_logs, inputs=[magnets_input, encrypt_check, remote_input, folder_input, email_input], outputs=[status, console])
+        btn_clear.click(fn=lambda: ("", "Standby", "", "gdrive", "VaultStream", ""), outputs=[magnets_input, status, console, remote_input, folder_input, email_input])
         
     # Rodapé
     gr.Markdown("<p style='text-align:center; color:#555; font-size:13px;'>© 2026 VaultStream — Augusto Mate</p>")

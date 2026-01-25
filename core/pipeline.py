@@ -15,7 +15,7 @@ def get_sys_info():
     ram = psutil.virtual_memory()
     return f"📊 [SYS] Disco Livre: {disk.free // (2**30)}GB | RAM: {ram.percent}%"
 
-def run_pipeline(magnet_link: str, use_encryption: bool):
+def run_pipeline(magnet_link: str, use_encryption: bool, r_remote: str, r_folder: str, email_to: str):
     """
     Executa o fluxo completo com feedback em tempo real para a UI.
     """
@@ -65,8 +65,8 @@ def run_pipeline(magnet_link: str, use_encryption: bool):
 
     # 3. UPLOAD (Rclone)
     if final_path and os.path.exists(final_path):
-        yield f"🚀 Enviando para a Nuvem: {os.path.basename(final_path)}..."
-        for status in upload_with_rclone(final_path, RCLONE_REMOTE, RCLONE_FOLDER):
+        yield f"🚀 Enviando para {r_remote}:{r_folder}..."
+        for status in upload_with_rclone(final_path, r_remote, r_folder):
             yield status
 
     # 4. LIMPEZA
@@ -78,9 +78,10 @@ def run_pipeline(magnet_link: str, use_encryption: bool):
 
     yield get_sys_info()
 
-    # Notificação Final (async/iterável de logs)
-    for log in send_email("Tarefa Concluída", "O arquivo foi processado e enviado para a nuvem.", SMTP_SERVER, SMTP_PORT, EMAIL_FROM, EMAIL_PASS, EMAIL_TO):
-        yield log
+    # Notificação Final Interativa
+    if email_to:
+        for log in send_email("Tarefa Concluída", "O arquivo foi processado e enviado para a nuvem.", SMTP_SERVER, SMTP_PORT, EMAIL_FROM, EMAIL_PASS, EMAIL_TO):
+            yield log
     
     yield "🏁 [CONCLUÍDO]"
 	
@@ -92,6 +93,3 @@ def run_pipeline(magnet_link: str, use_encryption: bool):
     except:
         # Não falha o pipeline se o envio final falhar
         pass
-     
-
-

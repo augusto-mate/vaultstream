@@ -23,8 +23,7 @@ def process_links_with_logs(magnets_text, use_encryption):
         Tupla (status_label: str, log_text: str) para o componente Gradio.
     """
     # Extração de links, remoção de vazios
-    links = [l.strip() for l in magnets_text.splitlines() if l.strip()]
-    
+    links = [l.strip() for l in magnets_text.splitlines() if l.strip()]    
     # Validação inicial
     if not links:
         yield "Aguardando...", "❌ Erro:", "Por favor, insira pelo menos um link."
@@ -57,11 +56,11 @@ with gr.Blocks(css=custom_css, title="VaultStream Elite") as demo:
             encrypt_check = gr.Checkbox(label="🔐 Ativar Criptografia AES-256", value=True)
             
             with gr.Row():
-                btn_run = gr.Button("🚀 INICIAR OPERAÇÃO", variant="primary")
+                btn_run = gr.Button("🚀 INICIAR", variant="primary")
                 btn_clear = gr.Button("🧹 LIMPAR")
         
         with gr.Column(scale=2):
-            status = gr.Label(value="Standby")
+            status = gr.Label(value="Aguardando comando...")
             console = gr.Textbox(label="Terminal de Saída", lines=12, elem_id="console-box", interactive=False)
 
         # A função process_links_with_logs recebe magnets_input como input e produz outputs status e console de logs

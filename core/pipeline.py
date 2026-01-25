@@ -46,15 +46,15 @@ def run_pipeline(magnet_link: str, use_encryption: bool):
     # 2. Processamento de Arquivo com Senha (7-Zip)
     final_path = ""
 	# CRIPTOGRAFIA DIRETO
-	if use_encryption:
-		yield "🔐 Criptografia ativada (AES-256). Processando..."
+    if use_encryption:
+        yield "🔐 Criptografia ativada (AES-256). Processando..."
     	for status in encrypt_folder(DOWNLOAD_DIR, ENCRYPTED_DIR, ZIP_PASSWORD):
-        	if "✅ Arquivo gerado" in status:
-            	final_path = status.split(": ")[1].strip()
-        	yield status
+            if "✅ Arquivo gerado" in status:
+                final_path = status.split(": ")[1].strip()
+            yield status
 	# CRIPTOGRAFIA OPCIONAL
-	else:
-		yield "⏩ Criptografia ignorada. Preparando arquivos..."
+    else:
+        yield "⏩ Criptografia ignorada. Preparando arquivos originais..."
         # Pega a primeira pasta/arquivo dentro do download_dir para subir
         items = os.listdir(DOWNLOAD_DIR)
         if items:
@@ -64,10 +64,10 @@ def run_pipeline(magnet_link: str, use_encryption: bool):
             return
 
     # 3. UPLOAD (Rclone)
-	if final_path and os.path.exists(final_path):
-		yield f"🚀 Enviando para a Nuvem: {os.path.basename(final_path)}..."
-    	for status in upload_with_rclone(final_path, RCLONE_REMOTE, RCLONE_FOLDER):
-        	yield status
+    if final_path and os.path.exists(final_path):
+        yield f"🚀 Enviando para a Nuvem: {os.path.basename(final_path)}..."
+        for status in upload_with_rclone(final_path, RCLONE_REMOTE, RCLONE_FOLDER):
+            yield status
 
     # 4. LIMPEZA
     yield "🧹 Realizando limpeza de arquivos temporários..."
@@ -82,7 +82,7 @@ def run_pipeline(magnet_link: str, use_encryption: bool):
     for log in send_email("Tarefa Concluída", "O arquivo foi processado e enviado para a nuvem.", SMTP_SERVER, SMTP_PORT, EMAIL_FROM, EMAIL_PASS, EMAIL_TO):
         yield log
     
-    yield "🏁 [CONCLUÍDO] Sistema em standby."
+    yield "🏁 [CONCLUÍDO]"
 	
     # 5. FINALIZAÇÃO
     yield "✅ TUDO PRONTO: Download, criptografia e upload concluídos!"
@@ -93,4 +93,5 @@ def run_pipeline(magnet_link: str, use_encryption: bool):
         # Não falha o pipeline se o envio final falhar
         pass
      
+
 

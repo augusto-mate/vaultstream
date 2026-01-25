@@ -12,7 +12,7 @@ if ROOT_DIR not in sys.path:
 from core.pipeline import run_pipeline
 
 # Lógica de processamento (UI separada)
-def process_links_with_logs(magnets_text):
+def process_links_with_logs(magnets_text, use_encryption):
     """
     Processa uma lista de magnet links (um por linha), chamando o pipeline real e emitindo logs incrementalmente para a UI.
 
@@ -27,7 +27,7 @@ def process_links_with_logs(magnets_text):
     
     # Validação inicial
     if not links:
-        yield "❌ Erro", "Nenhum link detectado."
+        yield "Aguardando...", "❌ Erro:", "Por favor, insira pelo menos um link."
         return
 
     # Acúmulo de logs para apresentação incremental
@@ -36,7 +36,7 @@ def process_links_with_logs(magnets_text):
     # Feedback visual 
     for link in links:
         # Aqui processa o pipeline real para o link atual
-        for step_log in run_pipeline(link):
+        for step_log in run_pipeline(link, use_encryption):
             full_log += step_log + "\n"
             yield "🔄 Processando...", full_log
 
@@ -52,17 +52,24 @@ with gr.Blocks(css=custom_css, title="VaultStream Elite") as demo:
     
     with gr.Row():
         with gr.Column(scale=1):
-            magnets_input = gr.Textbox(label="🔗 Magnet Links", placeholder="Cole aqui...", lines=10)
-            btn = gr.Button("🚀 INICIAR OPERAÇÃO", variant="primary")
+            magnets_input = gr.Textbox(label="🔗 Magnet Links", placeholder="Cole seus links aqui...\nAceita múltiplos links (um por linha).\nRecomendado: Até 5 links por vez.", lines=8)
+            
+            encrypt_check = gr.Checkbox(label="🔐 Ativar Criptografia AES-256", value=True)
+            
+            with gr.Row():
+                btn_run = gr.Button("🚀 INICIAR OPERAÇÃO", variant="primary")
+                btn_clear = gr.Button("🧹 LIMPAR")
         
         with gr.Column(scale=2):
-            status = gr.Textbox(value="Aguardando comando...")
-            console = gr.Textbox(label="Terminal de Saída", lines=15, elem_id="console-box", interactive=False)
+            status = gr.Label(value="Standby")
+            console = gr.Textbox(label="Terminal de Saída", lines=12, elem_id="console-box", interactive=False)
 
         # A função process_links_with_logs recebe magnets_input como input e produz outputs status e console de logs
-        btn.click(fn=process_links_with_logs, inputs=magnets_input, outputs=[status, console])
-
-    gr.Markdown("<p style='text-align:center; color:#555; font-size:12px;'>© 2026 VaultStream — Augusto Mate</p>")
+        btn_run.click(fn=process_links_with_logs, inputs=[magnets_input, encrypt_check], outputs=[status, console])
+        btn_clear.click(fn=lambda: ("", "Standby", ""), outputs=[magnets_input, status, console])
+        
+    # Rodapé
+    gr.Markdown("<p style='text-align:center; color:#555; font-size:13px;'>© 2026 VaultStream — Augusto Mate</p>")
 
 # Executa o app
 if __name__ == "__main__":

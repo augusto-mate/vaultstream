@@ -2,6 +2,7 @@
 
 import subprocess
 import os
+import re
 
 def upload_with_rclone(file_path: str, remote: str, folder: str):
     """
@@ -17,7 +18,7 @@ def upload_with_rclone(file_path: str, remote: str, folder: str):
     # Valida a existência antes de prosseguir (usando o caminho absoluto)
     if not os.path.exists(abs_path):
         raise FileNotFoundError(f"O caminho {abs_path} não existe.")
-
+    
     cmd = [
         "rclone", "copy", abs_path, f"{remote}:{folder}",
         "-P",                 # Flag de progresso
@@ -28,15 +29,24 @@ def upload_with_rclone(file_path: str, remote: str, folder: str):
     ]
 
     process = subprocess.Popen(
-        cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
     )
 
-    for line in process.stdout:
-        # Filtra as linhas de progresso do Rclone para o console
-        if "Transferred" in line or "%" in line:
-            yield f"📤 Upload: {line.strip()}"
+    for line in iter(process.stdout.readline, ""):
+        line = line.strip()
+        if line:
+            # Filtra as linhas de progresso do Rclone para o console
+            # Ex: 4.8GiB / 6.0GiB, 80%, 11 MiB/s, ETA 1m
+            if "Transferring" in line or "%" in line:
+                # Limpa caracteres de escape do Rclone (\r)
+                clean_line = line.replace('\r', '').replace('*', '').strip()
+                yield f"📤 {clean_line}"
+            else:
+                yield f"ℹ️ {line}"
 
-    process.wait()
-    if process.returncode != 0:
+    process.stdout.close()
+    return_code = process.wait()
+    if return_code == 0:
+        yield "✅ Upload concluído com sucesso!"
+    else:
         yield "❌ Erro durante o upload para a nuvem."
-        

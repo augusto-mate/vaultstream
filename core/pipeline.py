@@ -15,16 +15,16 @@ def get_sys_info():
     ram = psutil.virtual_memory()
     return f"📊 [SYS] Disco Livre: {disk.free // (2**30)}GB | RAM: {ram.percent}%"
 
-def run_pipeline(magnet_link: str, use_encryption: bool, r_remote: str, r_folder: str, email_to: str):
+def run_pipeline(magnet_link: str, use_encryption: bool, r_remote: str, r_folder: str):
     """
     Executa o fluxo completo com feedback em tempo real para a UI.
     """
     # Não falha o pipeline se o envio inicial falhar
-    yield "📧 Enviando notificação de início..."
-    try:
-        send_email("VaultStream", "Download iniciado", SMTP_SERVER, SMTP_PORT, EMAIL_FROM, EMAIL_PASS, EMAIL_TO)
-    except Exception as e:
-        yield f"⚠️ Falha no email (opcional): {str(e)}"
+    # yield "📧 Enviando notificação de início..."
+    # try:
+        # send_email("VaultStream", "Download iniciado", SMTP_SERVER, SMTP_PORT, EMAIL_FROM, EMAIL_PASS, EMAIL_TO)
+    # except Exception as e:
+        # yield f"⚠️ Falha no email (opcional): {str(e)}"
 
     # Feedback curto com o link (limitado para manter o UI responsivo)
     yield f"🔄 Iniciando Pipeline para: {magnet_link[:40]}..."
@@ -33,8 +33,8 @@ def run_pipeline(magnet_link: str, use_encryption: bool, r_remote: str, r_folder
     yield get_sys_info()
 
     # Notificação Inicial específica do pipeline (log iterável)
-    for log in send_email("Tarefa Iniciada", f"O download do magnet {magnet_link[:30]} começou.", SMTP_SERVER, SMTP_PORT, EMAIL_FROM, EMAIL_PASS, EMAIL_TO):
-        yield log
+    # for log in send_email("Tarefa Iniciada", f"O download do magnet {magnet_link[:30]} começou.", SMTP_SERVER, SMTP_PORT, EMAIL_FROM, EMAIL_PASS, EMAIL_TO):
+        # yield log
     
     # 1. DOWNLOAD (Motor Aria2)
     yield "📡 Conectando aos peers e iniciando download..."
@@ -63,7 +63,7 @@ def run_pipeline(magnet_link: str, use_encryption: bool, r_remote: str, r_folder
             yield "❌ Erro: Nenhum arquivo encontrado para upload."
             return
 
-    # 3. UPLOAD (Rclone)
+    # 3. UPLOAD (Rclone) com Logs Formatados
     if final_path and os.path.exists(final_path):
         yield f"🚀 Enviando para {r_remote}:{r_folder}..."
         for status in upload_with_rclone(final_path, r_remote, r_folder):
@@ -79,17 +79,19 @@ def run_pipeline(magnet_link: str, use_encryption: bool, r_remote: str, r_folder
     yield get_sys_info()
 
     # Notificação Final Interativa
-    if email_to:
-        for log in send_email("Tarefa Concluída", "O arquivo foi processado e enviado para a nuvem.", SMTP_SERVER, SMTP_PORT, EMAIL_FROM, EMAIL_PASS, EMAIL_TO):
-            yield log
+    # if email_to:
+        # for log in send_email("Tarefa Concluída", "O arquivo foi processado e enviado para a nuvem.", SMTP_SERVER, SMTP_PORT, EMAIL_FROM, EMAIL_PASS, EMAIL_TO):
+            # yield log
     
-    yield "🏁 [CONCLUÍDO]"
+    # yield "✅ [CONCLUÍDO]"
 	
     # 5. FINALIZAÇÃO
-    yield "✅ TUDO PRONTO: Download, criptografia e upload concluídos!"
+    yield "🏁 Download, criptografia e upload concluídos!"
     
-    try:
-        send_email("VaultStream", "Download concluído com sucesso", SMTP_SERVER, SMTP_PORT, EMAIL_FROM, EMAIL_PASS, EMAIL_TO)
-    except:
+    # try:
+        # send_email("VaultStream", "Download concluído com sucesso", SMTP_SERVER, SMTP_PORT, EMAIL_FROM, EMAIL_PASS, EMAIL_TO)
+    # except:
         # Não falha o pipeline se o envio final falhar
-        pass
+        # pass
+
+    yield "Sistema pronto para o próximo link."

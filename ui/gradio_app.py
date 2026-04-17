@@ -39,6 +39,10 @@ def process_links_with_logs(magnets_text, use_encryption, rclone_remote, rclone_
             full_log += step_log + "\n"
             yield "🔄 Processando...", full_log
 
+def reset_interface():
+    # Retorna valores iniciais e força o status para Standby
+    return gr.update(value=""), gr.update(value="Standby"), gr.update(value="")
+
 # Estilo visual moderno (UI Gradio) — Dark Mode
 custom_css = """
 .gradio-container { background-color: #0e1117; }
@@ -77,7 +81,13 @@ with gr.Blocks(css=custom_css, title="VaultStream Elite") as demo:
 
         # A função process_links_with_logs recebe magnets_input como input e produz outputs status e console de logs
         btn_run.click(fn=process_links_with_logs, inputs=[magnets_input, encrypt_check, remote_input, folder_input], outputs=[status_label, console_output])
-        btn_clear.click(fn=lambda: ("", "Standby", "", "gdrive", "VaultStream"), outputs=[magnets_input, status_label, console_output, remote_input, folder_input])
+        # btn_clear.click(fn=lambda: ("", "Standby", "", "gdrive", "VaultStream"), outputs=[magnets_input, status_label, console_output, remote_input, folder_input])
+        btn_clear.click(
+            fn=reset_interface,
+            inputs=None,
+            outputs=[magnets_input, status_label, console_output],
+            queue=False # Importante: pula a fila para limpar instantaneamente
+        )
         
     # Rodapé
     gr.Markdown("<p style='text-align:center; color:#555; font-size:13px;'>© 2026 VaultStream — Augusto Mate</p>")
